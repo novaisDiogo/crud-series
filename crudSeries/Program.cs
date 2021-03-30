@@ -6,8 +6,6 @@ namespace crudSeries
 {
     class Program
     {
-        //Melhorias Confirmar exclusao
-        //Fazer de filme
         static SerieRepositorio repositorio = new SerieRepositorio();
         static FilmeRepositorio filmeRepositorio = new FilmeRepositorio();
         static void Main(string[] args)
@@ -45,7 +43,8 @@ namespace crudSeries
                             opcao = OpcaoFilmeOuSerie();
                             break;
                         default:
-                            throw new ArgumentOutOfRangeException();
+                            Console.WriteLine("A opção digitada não existe! insira as opções listadas!");
+                            break;
                     }
                 }
                 else if (opcao == "2")
@@ -76,12 +75,14 @@ namespace crudSeries
                             opcao = OpcaoFilmeOuSerie();
                             break;
                         default:
-                            throw new ArgumentOutOfRangeException();
+                            Console.WriteLine("A opção digitada não existe! insira as opções listadas!");
+                            break;
                     }
                 }
                 else
                 {
-                    Console.WriteLine("Opção incorreta!");
+                    Console.WriteLine("A opção digitada não existe! insira as opções listadas!");
+                    opcao = OpcaoFilmeOuSerie();
                 }
 
             }
@@ -120,80 +121,145 @@ namespace crudSeries
                 Console.WriteLine("{0}-{1}", e, System.Enum.GetName(typeof(Genero), e));
             }
 
-            Console.Write("Digite o gênero entre as opções acima: ");
-            int entradaGenero = int.Parse(Console.ReadLine());
+            try
+            {
+                Console.Write("Digite o gênero entre as opções acima: ");
+                int entradaGenero = int.Parse(Console.ReadLine());
 
-            Console.Write("Digite o Título do filme: ");
-            string entradaTitulo = Console.ReadLine();
+                Console.Write("Digite o Título do filme: ");
+                string entradaTitulo = Console.ReadLine();
 
-            Console.Write("Digite o Ano de Início do filme: ");
-            int entradaAno = int.Parse(Console.ReadLine());
+                Console.Write("Digite o Ano de Início do filme: ");
+                int entradaAno = int.Parse(Console.ReadLine());
 
-            Console.Write("Digite a Descrição do filme: ");
-            string entradaDescricao = Console.ReadLine();
+                Console.Write("Digite a Descrição do filme: ");
+                string entradaDescricao = Console.ReadLine();
 
-            Filme filme = new Filme(id: filmeRepositorio.ProximoId(),
-                genero: (Genero)entradaGenero, titulo: entradaTitulo, descricao: entradaDescricao,
-                ano: entradaAno);
+                Filme filme = new Filme(id: filmeRepositorio.ProximoId(),
+                    genero: (Genero)entradaGenero, titulo: entradaTitulo, descricao: entradaDescricao,
+                    ano: entradaAno);
 
-            filmeRepositorio.Insere(filme);
+                filmeRepositorio.Insere(filme);
+            }
+            catch (FormatException ex)
+            {
+                Console.WriteLine("Erro, Formato digitado não valido, digite um numero inteiro para genero e ano!");
+            }
+            catch (InvalidCastException ex)
+            {
+                Console.WriteLine("Erro, Formato digitado não valido, digite um numero inteiro para genero e ano!");
+                Console.WriteLine("Erro: " + ex);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erro: " + ex);
+            }
+
         }
 
         private static void AtualizarFilme()
         {
-            Console.Write("Digite o id do filme: ");
-            int indiceFilme = int.Parse(Console.ReadLine());
-
-            foreach (int e in System.Enum.GetValues(typeof(Genero)))
+            try
             {
-                Console.WriteLine("{0}-{1}", e, System.Enum.GetName(typeof(Genero), e));
+                Console.Write("Digite o id do filme: ");
+                int indiceFilme = int.Parse(Console.ReadLine());
+
+                foreach (int e in System.Enum.GetValues(typeof(Genero)))
+                {
+                    Console.WriteLine("{0}-{1}", e, System.Enum.GetName(typeof(Genero), e));
+                }
+
+                Console.Write("Digite o gênero entre as opções acima: ");
+                int entradaGenero = int.Parse(Console.ReadLine());
+
+                Console.Write("Digite o Título do filme: ");
+                string entradaTitulo = Console.ReadLine();
+
+                Console.Write("Digite o Ano de Início do filme: ");
+                int entradaAno = int.Parse(Console.ReadLine());
+
+                Console.Write("Digite a Descrição do filme: ");
+                string entradaDescricao = Console.ReadLine();
+
+                Filme filme = new Filme(id: filmeRepositorio.ProximoId(),
+                    genero: (Genero)entradaGenero, titulo: entradaTitulo, descricao: entradaDescricao,
+                    ano: entradaAno);
+
+                filmeRepositorio.Atualiza(indiceFilme, filme);
             }
-
-            Console.Write("Digite o gênero entre as opções acima: ");
-            int entradaGenero = int.Parse(Console.ReadLine());
-
-            Console.Write("Digite o Título do filme: ");
-            string entradaTitulo = Console.ReadLine();
-
-            Console.Write("Digite o Ano de Início do filme: ");
-            int entradaAno = int.Parse(Console.ReadLine());
-
-            Console.Write("Digite a Descrição do filme: ");
-            string entradaDescricao = Console.ReadLine();
-
-            Filme filme = new Filme(id: filmeRepositorio.ProximoId(),
-                genero: (Genero)entradaGenero, titulo: entradaTitulo, descricao: entradaDescricao,
-                ano: entradaAno);
-
-            filmeRepositorio.Atualiza(indiceFilme, filme);
+            catch (FormatException ex)
+            {
+                Console.WriteLine("Erro, Formato digitado não valido, digite um numero inteiro para id, genero e ano!");
+            }
+            catch (InvalidCastException ex)
+            {
+                Console.WriteLine("Erro, Formato digitado não valido, digite um numero inteiro para id, genero e ano!");
+                Console.WriteLine("Erro: " + ex);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erro: " + ex);
+            }
         }
 
         private static void ExcluirFilme()
         {
-            Console.Write("Digite o id do filme: ");
-            int indiceFilme = int.Parse(Console.ReadLine());
-
-            Console.WriteLine("Tem certeza que deseja excluir? [0] NÃO [1] SIM");
-            int excluir = int.Parse(Console.ReadLine());
-
-            if (excluir == 1)
+            try
             {
-                filmeRepositorio.Exclui(indiceFilme);
+                Console.Write("Digite o id do filme: ");
+                int indiceFilme = int.Parse(Console.ReadLine());
+
+                Console.WriteLine("Tem certeza que deseja excluir? [0] NÃO [1] SIM");
+                int excluir = int.Parse(Console.ReadLine());
+
+                if (excluir == 1)
+                {
+                    filmeRepositorio.Exclui(indiceFilme);
+                }
+                else
+                {
+                    return;
+                }
             }
-            else
+            catch (FormatException ex)
             {
-                return;
+                Console.WriteLine("Erro, Formato digitado não valido, as opções devem ser um numero inteiro!");
+            }
+            catch (InvalidCastException ex)
+            {
+                Console.WriteLine("Erro, Formato digitado não valido, as opções devem ser um numero inteiro!");
+                Console.WriteLine("Erro: " + ex);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erro: " + ex);
             }
         }
 
         private static void VisualizarFilme()
         {
-            Console.Write("Digite o id do filme: ");
-            int indiceFilme = int.Parse(Console.ReadLine());
+            try
+            {
+                Console.Write("Digite o id do filme: ");
+                int indiceFilme = int.Parse(Console.ReadLine());
 
-            var filme = filmeRepositorio.RetornaPorId(indiceFilme);
+                var filme = filmeRepositorio.RetornaPorId(indiceFilme);
 
-            Console.WriteLine(filme);
+                Console.WriteLine(filme);
+            }
+            catch (FormatException ex)
+            {
+                Console.WriteLine("Erro, Formato digitado não valido, id deve ser um numero inteiro!");
+            }
+            catch (InvalidCastException ex)
+            {
+                Console.WriteLine("Erro, Formato digitado não valido, id deve ser um numero inteiro!");
+                Console.WriteLine("Erro: " + ex);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erro: " + ex);
+            }
         }
         #endregion
 
@@ -206,74 +272,122 @@ namespace crudSeries
             {
                 Console.WriteLine("{0}-{1}", i, System.Enum.GetName(typeof(Genero), i));
             }
-            Console.Write("Digite o gênero entre as opções acima: ");
-            int entradaGenero = int.Parse(Console.ReadLine());
 
-            Console.Write("Digite o Título da Série: ");
-            string entradaTitulo = Console.ReadLine();
+            try
+            {
+                Console.Write("Digite o gênero entre as opções acima: ");
+                int entradaGenero = int.Parse(Console.ReadLine());
 
-            Console.Write("Digite o Ano de Início da Série: ");
-            int entradaAno = int.Parse(Console.ReadLine());
+                Console.Write("Digite o Título da Série: ");
+                string entradaTitulo = Console.ReadLine();
 
-            Console.Write("Digite a Descrição da Série: ");
-            string entradaDescricao = Console.ReadLine();
+                Console.Write("Digite o Ano de Início da Série: ");
+                int entradaAno = int.Parse(Console.ReadLine());
 
-            Serie novaSerie = new Serie(id: repositorio.ProximoId(),
-                                        genero: (Genero)entradaGenero,
-                                        titulo: entradaTitulo,
-                                        ano: entradaAno,
-                                        descricao: entradaDescricao);
+                Console.Write("Digite a Descrição da Série: ");
+                string entradaDescricao = Console.ReadLine();
 
-            repositorio.Insere(novaSerie);
+                Serie novaSerie = new Serie(id: repositorio.ProximoId(),
+                                            genero: (Genero)entradaGenero,
+                                            titulo: entradaTitulo,
+                                            ano: entradaAno,
+                                            descricao: entradaDescricao);
+
+                repositorio.Insere(novaSerie);
+            }
+            catch (FormatException ex)
+            {
+                Console.WriteLine("Erro, Formato digitado não valido, as opções genero e ano devem ser um numero inteiro!");
+            }
+            catch (InvalidCastException ex)
+            {
+                Console.WriteLine("Erro, Formato digitado não valido, as opções genero e ano devem ser um numero inteiro!");
+                Console.WriteLine("Erro: " + ex);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erro: " + ex);
+            }
         }
 
         private static void AtualizarSerie()
         {
-            Console.Write("Digite o id da série: ");
-            int indiceSerie = int.Parse(Console.ReadLine());
-
-            foreach (int i in System.Enum.GetValues(typeof(Genero)))
+            try
             {
-                Console.WriteLine("{0}-{1}", i, System.Enum.GetName(typeof(Genero), i));
+                Console.Write("Digite o id da série: ");
+                int indiceSerie = int.Parse(Console.ReadLine());
+
+                foreach (int i in System.Enum.GetValues(typeof(Genero)))
+                {
+                    Console.WriteLine("{0}-{1}", i, System.Enum.GetName(typeof(Genero), i));
+                }
+                Console.Write("Digite o gênero entre as opções acima: ");
+                int entradaGenero = int.Parse(Console.ReadLine());
+
+                Console.Write("Digite o Título da Série: ");
+                string entradaTitulo = Console.ReadLine();
+
+                Console.Write("Digite o Ano de Início da Série: ");
+                int entradaAno = int.Parse(Console.ReadLine());
+
+                Console.Write("Digite a Descrição da Série: ");
+                string entradaDescricao = Console.ReadLine();
+
+                Serie atualizaSerie = new Serie(id: indiceSerie,
+                                            genero: (Genero)entradaGenero,
+                                            titulo: entradaTitulo,
+                                            ano: entradaAno,
+                                            descricao: entradaDescricao);
+
+                repositorio.Atualiza(indiceSerie, atualizaSerie);
             }
-            Console.Write("Digite o gênero entre as opções acima: ");
-            int entradaGenero = int.Parse(Console.ReadLine());
-
-            Console.Write("Digite o Título da Série: ");
-            string entradaTitulo = Console.ReadLine();
-
-            Console.Write("Digite o Ano de Início da Série: ");
-            int entradaAno = int.Parse(Console.ReadLine());
-
-            Console.Write("Digite a Descrição da Série: ");
-            string entradaDescricao = Console.ReadLine();
-
-            Serie atualizaSerie = new Serie(id: indiceSerie,
-                                        genero: (Genero)entradaGenero,
-                                        titulo: entradaTitulo,
-                                        ano: entradaAno,
-                                        descricao: entradaDescricao);
-
-            repositorio.Atualiza(indiceSerie, atualizaSerie);
+            catch (FormatException ex)
+            {
+                Console.WriteLine("Erro, Formato digitado não valido, id, genero e ano devem ser um numero inteiro!");
+            }
+            catch (InvalidCastException ex)
+            {
+                Console.WriteLine("Erro, Formato digitado não valido, id, genero e ano devem ser um numero inteiro!");
+                Console.WriteLine("Erro: " + ex);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erro: " + ex);
+            }
         }
 
         private static void ExcluirSerie()
         {
-            Console.Write("Digite o id da série: ");
-            int indiceSerie = int.Parse(Console.ReadLine());
-
-            Console.WriteLine("Tem certeza que deseja excluir? [0] NÃO [1] SIM");
-            int excluir = int.Parse(Console.ReadLine());
-
-            if (excluir == 1)
+            try
             {
-                repositorio.Exclui(indiceSerie);
-            }
-            else
-            {
-                return;
-            }
+                Console.Write("Digite o id da série: ");
+                int indiceSerie = int.Parse(Console.ReadLine());
 
+                Console.WriteLine("Tem certeza que deseja excluir? [0] NÃO [1] SIM");
+                int excluir = int.Parse(Console.ReadLine());
+
+                if (excluir == 1)
+                {
+                    repositorio.Exclui(indiceSerie);
+                }
+                else
+                {
+                    return;
+                }
+            }
+            catch (FormatException ex)
+            {
+                Console.WriteLine("Erro, Formato digitado não valido, as opções devem ser um numero inteiro!");
+            }
+            catch (InvalidCastException ex)
+            {
+                Console.WriteLine("Erro, Formato digitado não valido, as opções devem ser um numero inteiro!");
+                Console.WriteLine("Erro: " + ex);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erro: " + ex);
+            }
         }
 
         private static void ListarSeries()
@@ -298,12 +412,28 @@ namespace crudSeries
 
         private static void VisualizarSerie()
         {
-            Console.Write("Digite o id da série: ");
-            int indiceSerie = int.Parse(Console.ReadLine());
+            try
+            {
+                Console.Write("Digite o id da série: ");
+                int indiceSerie = int.Parse(Console.ReadLine());
 
-            var serie = repositorio.RetornaPorId(indiceSerie);
+                var serie = repositorio.RetornaPorId(indiceSerie);
 
-            Console.WriteLine(serie);
+                Console.WriteLine(serie);
+            }
+            catch (FormatException ex)
+            {
+                Console.WriteLine("Erro, Formato digitado não valido, id deve ser numero inteiro!");
+            }
+            catch (InvalidCastException ex)
+            {
+                Console.WriteLine("Erro, Formato digitado não valido, id deve ser numero inteiro!");
+                Console.WriteLine("Erro: " + ex);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Erro: " + ex);
+            }
         }
         #endregion
 
